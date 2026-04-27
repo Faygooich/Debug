@@ -738,7 +738,23 @@ function parseFilename(filename){
         id: 'art-' + base   // безопасный id (не зависит от того, читается ли base как валидный)
     };
 }
+function executeScripts(container) {
+    const scripts = container.querySelectorAll("script");
 
+    scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+
+        // копируем содержимое
+        if (oldScript.src) {
+            newScript.src = oldScript.src;
+        } else {
+            newScript.textContent = oldScript.textContent;
+        }
+
+        document.body.appendChild(newScript);
+        oldScript.remove();
+    });
+}
 // ─── Show specific article ─────────────────────────
 function showArticle(id){
     document.querySelectorAll('.nav-item[data-art]').forEach(function(b){
