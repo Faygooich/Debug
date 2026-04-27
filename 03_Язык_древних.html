@@ -385,7 +385,7 @@ textarea.tpanel-area:focus {
             labelIn.textContent = 'ВВОД — СОВРЕМЕННЫЙ ТЕКСТ';
             labelOut.textContent = 'ВЫВОД — ЯЗЫК ДРЕВНИХ';
             inp.placeholder = 'Введите текст для перевода…';
-            out.dataset.placeholder = 'здесь появится шифр…';
+            out.dataset.placeholder = 'здесь появится перевод…';
         } else {
             btnDec.classList.add('active');
             btnEnc.classList.remove('active');
@@ -405,6 +405,7 @@ textarea.tpanel-area:focus {
     }
 
     function copyOutput() {
+        const text = out.textContent;
         if (!text) return;
 
         navigator.clipboard.writeText(text).then(function () {
@@ -437,7 +438,7 @@ textarea.tpanel-area:focus {
 
     if (copyBtn) copyBtn.addEventListener('click', copyOutput);
 
-    out.dataset.placeholder = 'здесь появится шифр…';
+    out.dataset.placeholder = 'здесь появится перевод…';
     setMode('encode');
 
     window.copyOutput = copyOutput; // доступность из onclick=""
