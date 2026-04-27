@@ -738,23 +738,7 @@ function parseFilename(filename){
         id: 'art-' + base   // безопасный id (не зависит от того, читается ли base как валидный)
     };
 }
-function executeScripts(container) {
-    const scripts = container.querySelectorAll("script");
 
-    scripts.forEach(oldScript => {
-        const newScript = document.createElement("script");
-
-        // копируем содержимое
-        if (oldScript.src) {
-            newScript.src = oldScript.src;
-        } else {
-            newScript.textContent = oldScript.textContent;
-        }
-
-        document.body.appendChild(newScript);
-        oldScript.remove();
-    });
-}
 // ─── Show specific article ─────────────────────────
 function showArticle(id){
     document.querySelectorAll('.nav-item[data-art]').forEach(function(b){
@@ -863,7 +847,15 @@ async function loadArticles(){
             var resp = await fetch(encodeURI(art.filename), { cache: 'no-cache' });
             if (!resp.ok) throw new Error('HTTP ' + resp.status);
             articleEl.innerHTML = await resp.text();
-			executeScripts(articleEl);
+            // innerHTML не выполняет <script> — переносим каждый в живой элемент
+            articleEl.querySelectorAll('script').forEach(function(oldScript){
+                var newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(function(attr){
+                    newScript.setAttribute(attr.name, attr.value);
+                });
+                newScript.textContent = oldScript.textContent;
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
         } catch (e) {
             articleEl.innerHTML =
                 '<div class="load-error">Не удалось загрузить файл «' + art.filename + '»: ' + e.message + '</div>';

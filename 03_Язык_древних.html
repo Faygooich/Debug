@@ -232,7 +232,7 @@ textarea.tpanel-area:focus {
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
     const ENCODE_MAP = {
         '…': '⋯',
         '.': '·',
@@ -403,7 +403,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function copyOutput() {
-        const text = out.textContent;
         if (!text) return;
 
         navigator.clipboard.writeText(text).then(function () {
@@ -438,5 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     out.dataset.placeholder = 'здесь появится шифр…';
     setMode('encode');
-});
+
+    window.copyOutput = copyOutput; // доступность из onclick=""
+})();
 </script>
