@@ -1,0 +1,442 @@
+<div class="breadcrumb">СПРАВОЧНИК <span>/ Лор / 03</span></div>
+<h1 class="art-title">Язык Древних</h1>
+
+<p class="art-body">
+    Язык Древних — архаичная система письменности, некогда использовавшаяся обитателями территорий, на которых ныне располагается Ярусное королевство. На данный момент выделяют две основные теории его происхождения. Согласно первой, язык был широко распространён в эпоху правления Карточных мастей. Вторая же теория гласит, что эта письменность возникла в глубокой древности, задолго до установления власти Мастей, и принадлежит цивилизации, о которой почти ничего не известно.
+</p>
+
+<h2 class="sec-title">ПЕРЕВОДЧИК С ДРЕВНЕТЁМНОГО</h2>
+
+<div class="translator-wrap">
+    <div class="translator-mode-bar">
+        <button class="tmode-btn active" id="btn-encode">
+            <span class="tmode-icon">✦</span> Современный → Древний
+        </button>
+        <button class="tmode-btn" id="btn-decode">
+            <span class="tmode-icon">✦</span> Древний → Современный
+        </button>
+    </div>
+
+    <div class="translator-panels">
+        <div class="tpanel">
+            <div class="tpanel-label" id="label-input">ВВОД — СОВРЕМЕННЫЙ ТЕКСТ</div>
+            <textarea class="tpanel-area" id="t-input" placeholder="Введите текст для перевода…" spellcheck="false"></textarea>
+        </div>
+        <div class="translator-arrow">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 14 H24 M16 6 L24 14 L16 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="tpanel">
+            <div class="tpanel-label" id="label-output">ВЫВОД — ЯЗЫК ДРЕВНИХ</div>
+            <div class="tpanel-area tpanel-output" id="t-output"></div>
+            <button class="tcopy-btn" onclick="copyOutput()" title="Скопировать">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3a1 1 0 0 1 1-1h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <span id="copy-label">скопировать</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="translator-hint" id="translator-hint">
+        ⊙⊏⊒⌰⌰⊏⊔⟒⊜⟁ ⊙⟒⌰⌰⊚⊔⊙⟁
+    </div>
+</div>
+
+<style>
+/* ─── Основной текст статьи ─────────────────────────────── */
+.art-body {
+    line-height: 1.8;
+    margin: 18px 0 28px;
+    opacity: 0.9;
+}
+
+/* ─── Обёртка переводчика ───────────────────────────────── */
+.translator-wrap {
+    margin: 18px 0 32px;
+    border: 1px solid rgba(199, 15, 15, 0.35);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+/* ─── Панель режимов ────────────────────────────────────── */
+.translator-mode-bar {
+    display: flex;
+    border-bottom: 1px solid rgba(199, 15, 15, 0.25);
+    background: rgba(0, 0, 0, 0.3);
+}
+.tmode-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: rgba(199, 15, 15, 0.5);
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 11px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 2px solid transparent;
+}
+.tmode-btn:first-child {
+    border-right: 1px solid rgba(199, 15, 15, 0.2);
+}
+.tmode-btn .tmode-icon {
+    font-size: 9px;
+    opacity: 0.6;
+}
+.tmode-btn.active {
+    color: var(--red, #c70f0f);
+    border-bottom-color: var(--red, #c70f0f);
+    background: rgba(199, 15, 15, 0.06);
+}
+.tmode-btn:hover:not(.active) {
+    color: rgba(199, 15, 15, 0.75);
+    background: rgba(199, 15, 15, 0.04);
+}
+
+/* ─── Двойная панель ────────────────────────────────────── */
+.translator-panels {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr;
+    align-items: stretch;
+    padding: 16px;
+    gap: 0;
+}
+.translator-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(199, 15, 15, 0.45);
+    flex-shrink: 0;
+    padding: 0 4px;
+    padding-top: 24px;
+}
+.tpanel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.tpanel-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(199, 15, 15, 0.5);
+    padding: 0 2px;
+}
+.tpanel-area {
+    flex: 1;
+    min-height: 130px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(199, 15, 15, 0.25);
+    border-radius: 3px;
+    padding: 12px;
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.75;
+    color: inherit;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 0.5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+textarea.tpanel-area {
+    caret-color: var(--red, #c70f0f);
+}
+textarea.tpanel-area:focus {
+    border-color: rgba(199, 15, 15, 0.55);
+}
+.tpanel-output {
+    word-break: break-all;
+    white-space: pre-wrap;
+    color: var(--red, #c70f0f);
+    text-shadow: 0 0 5px rgba(199, 15, 15, 0.35);
+    letter-spacing: 1px;
+    overflow-y: auto;
+    cursor: text;
+    user-select: text;
+}
+.tpanel-output:empty::before {
+    content: attr(data-placeholder);
+    color: rgba(199, 15, 15, 0.3);
+    font-style: italic;
+    letter-spacing: 0.5px;
+    text-shadow: none;
+}
+
+/* ─── Кнопка копирования ────────────────────────────────── */
+.tcopy-btn {
+    align-self: flex-end;
+    background: none;
+    border: 1px solid rgba(199, 15, 15, 0.25);
+    border-radius: 3px;
+    color: rgba(199, 15, 15, 0.5);
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.tcopy-btn:hover {
+    color: var(--red, #c70f0f);
+    border-color: rgba(199, 15, 15, 0.5);
+    background: rgba(199, 15, 15, 0.06);
+}
+
+/* ─── Подсказка ─────────────────────────────────────────── */
+.translator-hint {
+    padding: 10px 16px;
+    border-top: 1px solid rgba(199, 15, 15, 0.15);
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: rgba(199, 15, 15, 0.2);
+    text-align: center;
+    user-select: none;
+    animation: hint-pulse 6s ease-in-out infinite;
+}
+@keyframes hint-pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* ─── Адаптив ───────────────────────────────────────────── */
+@media (max-width: 560px) {
+    .translator-panels {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+    .translator-arrow {
+        transform: rotate(90deg);
+        padding: 8px 0;
+        padding-top: 8px;
+    }
+    .tmode-btn {
+        font-size: 10px;
+        padding: 10px 10px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ENCODE_MAP = {
+        '…': '⋯',
+        '.': '·',
+        ',': '‚',
+        '!': '‼',
+        '?': '⸮',
+        ':': '∶',
+        ';': '⁏',
+        '-': '–',
+        '—': '—',
+        '(': '⟮',
+        ')': '⟯',
+        '[': '⟬',
+        ']': '⟭',
+        '"': '〝',
+        "'": '′',
+        '/': '⁄',
+        '\\': '∖',
+        '|': '⎪',
+        '_': '‗',
+        '=': '≡',
+        '+': '⊕',
+        '*': '✶',
+        '&': '⅋',
+        '%': '‰',
+        '#': '♯',
+        '@': '⊚',
+        '$': '⊜',
+
+        'А': '⟁', 'а': '⟁',
+        'Б': '⌇', 'б': '⌇',
+        'В': '⏃', 'в': '⏃',
+        'Г': '⋔', 'г': '⋔',
+        'Д': '⊑', 'д': '⊑',
+        'Е': '⟒', 'е': '⟒',
+        'Ё': '⟒', 'ё': '⟒',
+        'Ж': '☌', 'ж': '☌',
+        'З': '⊬', 'з': '⊬',
+        'И': '⟟', 'и': '⟟',
+        'Й': '⍀', 'й': '⍀',
+        'К': '⌰', 'к': '⌰',
+        'Л': '⊒', 'л': '⊒',
+        'М': '⊓', 'м': '⊓',
+        'Н': '⊔', 'н': '⊔',
+        'О': '⊏', 'о': '⊏',
+        'П': '⌖', 'п': '⌖',
+        'Р': '⌗', 'р': '⌗',
+        'С': '⌘', 'с': '⌘',
+        'Т': '⊙', 'т': '⊙',
+        'У': '⊚', 'у': '⊚',
+        'Ф': '⊛', 'ф': '⊛',
+        'Х': '⊜', 'х': '⊜',
+        'Ц': '⊝', 'ц': '⊝',
+        'Ч': '⊞', 'ч': '⊞',
+        'Ш': '⊟', 'ш': '⊟',
+        'Щ': '⊠', 'щ': '⊠',
+        'Ъ': '▒', 'ъ': '▒',
+        'Ы': '▓', 'ы': '▓',
+        'Ь': '░', 'ь': '░',
+        'Э': '⍾', 'э': '⍾',
+        'Ю': '⍿', 'ю': '⍿',
+        'Я': '⌬', 'я': '⌬'
+    };
+
+    const ENCODE_KEYS = Object.keys(ENCODE_MAP).sort((a, b) => b.length - a.length);
+
+    const DECODE_MAP = {};
+    for (const key of ENCODE_KEYS) {
+        const enc = ENCODE_MAP[key];
+        if (!(enc in DECODE_MAP)) DECODE_MAP[enc] = key;
+    }
+    const DECODE_KEYS = Object.keys(DECODE_MAP).sort((a, b) => b.length - a.length);
+
+    function encode(text) {
+        let result = '';
+        let i = 0;
+
+        while (i < text.length) {
+            let matched = false;
+
+            for (let k = 0; k < ENCODE_KEYS.length; k++) {
+                const key = ENCODE_KEYS[k];
+                if (text.startsWith(key, i)) {
+                    result += ENCODE_MAP[key];
+                    i += key.length;
+                    matched = true;
+                    break;
+                }
+            }
+
+            if (!matched) {
+                result += text[i];
+                i++;
+            }
+        }
+
+        return result;
+    }
+
+    function decode(text) {
+        let result = '';
+        let i = 0;
+
+        while (i < text.length) {
+            let matched = false;
+
+            for (let k = 0; k < DECODE_KEYS.length; k++) {
+                const key = DECODE_KEYS[k];
+                if (text.startsWith(key, i)) {
+                    result += DECODE_MAP[key];
+                    i += key.length;
+                    matched = true;
+                    break;
+                }
+            }
+
+            if (!matched) {
+                result += text[i];
+                i++;
+            }
+        }
+
+        return result;
+    }
+
+    const btnEnc = document.getElementById('btn-encode');
+    const btnDec = document.getElementById('btn-decode');
+    const labelIn = document.getElementById('label-input');
+    const labelOut = document.getElementById('label-output');
+    const inp = document.getElementById('t-input');
+    const out = document.getElementById('t-output');
+    const copyLabel = document.getElementById('copy-label');
+    const copyBtn = document.querySelector('.tcopy-btn');
+
+    if (!btnEnc || !btnDec || !labelIn || !labelOut || !inp || !out) {
+        console.error('Translator elements not found');
+        return;
+    }
+
+    let currentMode = 'encode';
+
+    function setMode(mode) {
+        currentMode = mode;
+
+        if (mode === 'encode') {
+            btnEnc.classList.add('active');
+            btnDec.classList.remove('active');
+            labelIn.textContent = 'ВВОД — СОВРЕМЕННЫЙ ТЕКСТ';
+            labelOut.textContent = 'ВЫВОД — ЯЗЫК ДРЕВНИХ';
+            inp.placeholder = 'Введите текст для перевода…';
+            out.dataset.placeholder = 'здесь появится шифр…';
+        } else {
+            btnDec.classList.add('active');
+            btnEnc.classList.remove('active');
+            labelIn.textContent = 'ВВОД — ЯЗЫК ДРЕВНИХ';
+            labelOut.textContent = 'ВЫВОД — СОВРЕМЕННЫЙ ТЕКСТ';
+            inp.placeholder = 'Введите символы древнего языка…';
+            out.dataset.placeholder = 'здесь появится перевод…';
+        }
+
+        inp.value = '';
+        out.textContent = '';
+    }
+
+    function translateText() {
+        const text = inp.value;
+        out.textContent = text ? (currentMode === 'encode' ? encode(text) : decode(text)) : '';
+    }
+
+    function copyOutput() {
+        const text = out.textContent;
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(function () {
+            if (copyLabel) {
+                copyLabel.textContent = 'скопировано ✓';
+                setTimeout(function () {
+                    copyLabel.textContent = 'скопировать';
+                }, 2000);
+            }
+        }).catch(function () {
+            const range = document.createRange();
+            range.selectNodeContents(out);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+    }
+
+    btnEnc.addEventListener('click', function () {
+        setMode('encode');
+        translateText();
+    });
+
+    btnDec.addEventListener('click', function () {
+        setMode('decode');
+        translateText();
+    });
+
+    inp.addEventListener('input', translateText);
+
+    if (copyBtn) copyBtn.addEventListener('click', copyOutput);
+
+    out.dataset.placeholder = 'здесь появится шифр…';
+    setMode('encode');
+});
+</script>
